@@ -1,9 +1,19 @@
 import { randomBytes } from 'crypto';
 import { WebSocket } from 'ws';
 import { readFileSync } from 'fs';
-import { homedir } from 'os';
 import createRpcProxy from './rpc_proxy.js';
 import { EventEmitter } from 'events';
+import untildify from './untildify';
+
+// this can be found in the config but for convenience
+export let localDaemonConnection = {
+    host: 'localhost',
+    port: 55400,
+    key_path: '~/.chia/mainnet/config/ssl/daemon/private_daemon.key',
+    cert_path: '~/.chia/mainnet/config/ssl/daemon/private_daemon.crt',
+    timeout_seconds: 30,
+    prefix: 'xch',
+};
 
 // this guy encapsulates asynchronous communication with the chia daemon
 // which in turn proxies communication to the other chia services
@@ -37,8 +47,8 @@ class ChiaDaemon extends EventEmitter {
 
         const ws = new WebSocket(address, {
             rejectUnauthorized: false,
-            key: readFileSync(this.connection.key_path.replace('~', homedir())),
-            cert: readFileSync(this.connection.cert_path.replace('~', homedir())),
+            key: readFileSync(untildify(this.connection.key_path)),
+            cert: readFileSync(untildify(this.connection.cert_path)),
         });
 
         ws.on('open', () => {

@@ -1,14 +1,14 @@
 {
-  "name": "chia-rpc",
+  "name": "chia-daemon",
   "version": "1.0.0",
-  "description": "A JS client for chia rpc with dynamically generated end points",
+  "description": "A JS daemon client for chia rpc with dynamically generated end points",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dkackman/chia-rpc.git"
+    "url": "git+https://github.com/dkackman/chia-daemon.git"
   },
   "keywords": [
     "chia",
@@ -19,14 +19,16 @@
   "author": "dkackman",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/dkackman/chia-rpc/issues"
+    "url": "https://github.com/dkackman/chia-daemon/issues"
   },
-  "homepage": "https://github.com/dkackman/chia-rpc#readme",
+  "homepage": "https://github.com/dkackman/chia-daemon#readme",
   "devDependencies": {
     "eslint": "^8.17.0",
     "jshint": "^2.13.4"
   },
   "dependencies": {
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
     "ws": "^8.8.0"
   }
 }
