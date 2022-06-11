@@ -3,7 +3,7 @@ import { WebSocket } from 'ws';
 import { readFileSync } from 'fs';
 import createRpcProxy from './rpc_proxy.js';
 import { EventEmitter } from 'events';
-import untildify from './untildify';
+import untildify from './untildify.js';
 
 // this can be found in the config but for convenience
 export let localDaemonConnection = {

@@ -1,3 +1,5 @@
+// adapted from https://github.com/Chia-Network/chia-blockchain-gui
+
 import yaml from 'js-yaml';
 import fs from 'fs';
 import os from 'os';
@@ -13,7 +15,6 @@ export default async function loadUIConfig(net = 'mainnet') {
     const selfHostname = get(config, 'ui.daemon_host', 'localhost');
     const daemonPort = get(config, 'ui.daemon_port', 55400);
 
-    // store these in the global object so they can be used by both main and renderer processes
     const configRootDir = getConfigRootDir(net);
 
     const certPath = path.resolve(

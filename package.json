@@ -2,9 +2,9 @@
   "name": "chia-daemon",
   "version": "1.0.0",
   "description": "A JS daemon client for chia rpc with dynamically generated end points",
-  "main": "chia_daemon.js",
+  "main": "src/chia_daemon.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --exit"
   },
   "repository": {
     "type": "git",
@@ -23,8 +23,11 @@
   },
   "homepage": "https://github.com/dkackman/chia-daemon#readme",
   "devDependencies": {
+    "chai": "^4.3.6",
     "eslint": "^8.17.0",
-    "jshint": "^2.13.4"
+    "jshint": "^2.13.4",
+    "mocha": "^10.0.0",
+    "request": "^2.88.2"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",

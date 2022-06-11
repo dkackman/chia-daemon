@@ -1,3 +1,5 @@
+// adapted from https://github.com/Chia-Network/chia-blockchain-gui
+
 import os from 'os';
 
 const homeDirectory = os.homedir();
