@@ -1,2 +1,2 @@
 # chia-rpc
-A JS client for chia rpc with dynamically generated end points
+A JS client for chia daemon with dynamically generated end points
