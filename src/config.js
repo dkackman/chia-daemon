@@ -4,22 +4,22 @@ import yaml from 'js-yaml';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { get } from 'lodash';
-import untildify from './untildify';
+import _ from 'lodash';
+import untildify from './untildify.js';
 
 const homeDirectory = os.homedir();
 
-export default async function loadUIConfig(net = 'mainnet') {
+export function loadUIConfig(net = 'mainnet') {
     const config = readConfigFile(net);
 
-    const selfHostname = get(config, 'ui.daemon_host', 'localhost');
-    const daemonPort = get(config, 'ui.daemon_port', 55400);
+    const selfHostname = _.get(config, 'ui.daemon_host', 'localhost');
+    const daemonPort = _.get(config, 'ui.daemon_port', 55400);
 
     const configRootDir = getConfigRootDir(net);
 
     const certPath = path.resolve(
         configRootDir,
-        get(
+        _.get(
             config,
             'ui.daemon_ssl.private_crt',
             'config/ssl/daemon/private_daemon.crt',
@@ -27,7 +27,7 @@ export default async function loadUIConfig(net = 'mainnet') {
     );
     const keyPath = path.resolve(
         configRootDir,
-        get(
+        _.get(
             config,
             'ui.daemon_ssl.private_key',
             'config/ssl/daemon/private_daemon.key',
@@ -51,7 +51,5 @@ export function getConfigRootDir(net = 'mainnet') {
 export function readConfigFile(net = 'mainnet') {
     const configRootDir = getConfigRootDir(net);
 
-    return yaml.load(
-        fs.readFileSync(path.resolve(configRootDir, 'config/config.yaml'), 'utf8'),
-    );
+    return yaml.load(fs.readFileSync(path.resolve(configRootDir, 'config/config.yaml'), 'utf8'));
 }
