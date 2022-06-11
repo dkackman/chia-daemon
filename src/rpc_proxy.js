@@ -1,4 +1,4 @@
-// This might be evil and generally abuiseive of the javascript type system but...
+// This might be evil and generally abusive of the javascript type system but...
 // This here will allow us to call an arbitray method-like thing on any object
 // and transform it into an rpc invocation though we don't know the endpoint name until runtime.
 // If the invoked method is an endpoint on the rpc server, it will be invoked as such.
@@ -19,7 +19,7 @@ export default function createRpcProxy(chia, endpoint) {
         get(target, functionName) {
             if (typeof target[functionName] === 'undefined') {
                 // here, since 'functionName' does not exist on the object, we are
-                // going to assume it is an rpc function name on endpoint
+                // going to assume it is an rpc function name on the endpoint
                 // here we call back into the chia server to do the RPC
                 return async (data) => await chia.sendCommand(endpoint, functionName, data);
             } else if (typeof target[functionName] === 'function') {

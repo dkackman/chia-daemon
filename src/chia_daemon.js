@@ -12,7 +12,6 @@ export let localDaemonConnection = {
     key_path: '~/.chia/mainnet/config/ssl/daemon/private_daemon.key',
     cert_path: '~/.chia/mainnet/config/ssl/daemon/private_daemon.crt',
     timeout_seconds: 30,
-    prefix: 'xch',
 };
 
 // this guy encapsulates asynchronous communication with the chia daemon
@@ -64,6 +63,10 @@ class ChiaDaemon extends EventEmitter {
                 this.incoming.set(msg.request_id, msg);
             } else if (msg.command === 'register_service') {
                 this.emit('connected');
+            }
+            else {
+                // received a socket message that was not a response to something we sent
+                this.emit('event_message', msg);
             }
         });
 

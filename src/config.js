@@ -7,7 +7,7 @@ import untildify from './untildify';
 
 const homeDirectory = os.homedir();
 
-export default async function loadConfig(net = 'mainnet') {
+export default async function loadUIConfig(net = 'mainnet') {
     const config = readConfigFile(net);
 
     const selfHostname = get(config, 'ui.daemon_host', 'localhost');
@@ -38,6 +38,7 @@ export default async function loadConfig(net = 'mainnet') {
         port: daemonPort,
         key_path: keyPath,
         cert_path: certPath,
+        timeout_seconds: 30,
     };
 }
 
