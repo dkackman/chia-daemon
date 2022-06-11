@@ -17,5 +17,8 @@ describe('chia-daemon', () => {
             expect(chia).to.not.equal(null);
             expect(chia).to.not.equal(undefined);
         });
+        it('should throw when no connection is provided', () => {
+            expect(() => new ChiaDaemon()).to.throw(Error);
+        });
     });
-} );
+});

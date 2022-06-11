@@ -19,6 +19,10 @@ export let localDaemonConnection = {
 class ChiaDaemon extends EventEmitter {
     constructor(connection, origin = 'my_chia_app') {
         super();
+        if (connection === undefined) {
+            throw new Error('Connection meta data must be provided');
+        }
+        
         this.connection = connection;
         this.origin = origin;
         this.outgoing = new Map(); // outgoing messages awaiting a response
