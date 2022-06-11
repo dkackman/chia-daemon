@@ -4,7 +4,7 @@
   "description": "A JS daemon client for chia rpc with dynamically generated end points",
   "main": "src/chia_daemon.js",
   "scripts": {
-    "test": "mocha --exit"
+    "test": "mocha test/*.ci.test* --exit"
   },
   "repository": {
     "type": "git",
