@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 import createRpcProxy from './rpc_proxy.js';
 import { EventEmitter } from 'events';
 import untildify from './untildify.js';
+import { promisify } from 'util';
 
 // this can be found in the config but for convenience
 export let localDaemonConnection = {
@@ -22,7 +23,7 @@ class ChiaDaemon extends EventEmitter {
         if (connection === undefined) {
             throw new Error('Connection meta data must be provided');
         }
-        
+
         this.connection = connection;
         this.origin = origin;
         this.outgoing = new Map(); // outgoing messages awaiting a response
@@ -40,7 +41,7 @@ class ChiaDaemon extends EventEmitter {
         };
     }
 
-    connect() {
+    async connect(timeout_milliseconds = 1000) {
         if (this.ws !== undefined) {
             throw new Error('Already connected');
         }
@@ -55,10 +56,11 @@ class ChiaDaemon extends EventEmitter {
         });
 
         ws.on('open', () => {
-            const msg = formatMessage('daemon', 'register_service', { service: 'chia_repl' }, this.origin);
+            const msg = formatMessage('daemon', 'register_service', { service: this.origin }, this.origin);
             ws.send(JSON.stringify(msg));
         });
 
+        let connected = false;
         ws.on('message', (data) => {
             const msg = JSON.parse(data);
 
@@ -67,6 +69,7 @@ class ChiaDaemon extends EventEmitter {
                 this.incoming.set(msg.request_id, msg);
             } else if (msg.command === 'register_service') {
                 this.emit('connected');
+                connected = true;
             }
             else {
                 // received a socket message that was not a response to something we sent
@@ -81,6 +84,19 @@ class ChiaDaemon extends EventEmitter {
         ws.on('close', () => {
             this.emit('disconnected');
         });
+
+        const timer = ms => new Promise(res => setTimeout(res, ms));
+        const start = Date.now();
+
+        // wait here until an incoming response shows up
+        while (!connected) {
+            await timer(100);
+            const elapsed = Date.now() - start;
+            if (elapsed > timeout_milliseconds) {
+                this.emit('error', new Error('Connection timeout expired'));
+                break;
+            }
+        }
 
         this.ws = ws;
     }
