@@ -20,29 +20,31 @@ describe('chia-daemon', () => {
             chia.on('error', e => {
                 error = true;
             });
-            await chia.connect();
+            const connected = await chia.connect();
+
             expect(error).to.equal(true);
+            expect(connected).to.equal(false);
         });
-        it('should succeed on valid connection _DEBUG_', async function() {
-            this.timeout(50000);
+        it('should return true on valid connection _DEBUG_', async function () {
             const connection = {
-                host: 'localhost',
+                host: '172.17.172.74',
                 port: 55400,
-                key_path: '~/.chia/mainnet/config/ssl/daemon/private_daemon.key',
-                cert_path: '~/.chia/mainnet/config/ssl/daemon/private_daemon.crt',
+                key_path: '~/.chia/mainnet - wsl/config/ssl/daemon/private_daemon.key',
+                cert_path: '~/.chia/mainnet - wsl/config/ssl/daemon/private_daemon.crt',
                 timeout_seconds: 30,
             };
-            
-            let error = false;
 
             const chia = new ChiaDaemon(connection, 'tests');
+            let error = false;
             chia.on('error', e => {
                 console.log(e);
                 error = true;
             });
-            await chia.connect(1750);
-            expect(error).to.equal(false);
+            const connected = await chia.connect();
             chia.disconnect();
+
+            expect(error).to.equal(false);
+            expect(connected).to.equal(true);
         });
     });
 });

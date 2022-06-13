@@ -75,10 +75,8 @@ class ChiaDaemon extends EventEmitter {
             }
         });
 
-        let error = false;
         ws.on('error', (e) => {
             this.emit('error', e);
-            error = true;
         });
 
         ws.on('close', () => {
@@ -89,7 +87,7 @@ class ChiaDaemon extends EventEmitter {
         const start = Date.now();
 
         // wait here until an incoming response shows up
-        while (!error && !connected) {
+        while (!connected) {
             await timer(100);
             const elapsed = Date.now() - start;
             if (elapsed > timeout_milliseconds) {
@@ -98,9 +96,11 @@ class ChiaDaemon extends EventEmitter {
             }
         }
 
-        if (!error && connected) {
+        if (connected) {
             this.ws = ws;
         }
+
+        return connected;
     }
 
     disconnect() {
