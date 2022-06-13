@@ -5,7 +5,8 @@
   "main": "src/chia_daemon.js",
   "scripts": {
     "test": "mocha test/*.ci.test.js --exit",
-    "test-live": "mocha --exit"
+    "test-live": "mocha --exit",
+    "debug": "mocha --exit"
   },
   "repository": {
     "type": "git",

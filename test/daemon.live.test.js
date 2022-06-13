@@ -30,5 +30,19 @@ describe('chia-daemon', () => {
             await chia.connect();
             expect(error).to.equal(true);
         });
+        it('should succeed on valid connection _DEBUG_', async function() {
+            this.timeout(5000);
+            let error = false;
+
+            const chia = new ChiaDaemon(connection, 'tests');
+            chia.on('error', e => {
+                console.log(e);
+                error = true;
+            });
+            await chia.connect(1750);
+            expect(error).to.equal(false);
+            chia.disconnect();
+            this.done();
+        });
     });
 });

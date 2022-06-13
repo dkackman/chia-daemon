@@ -68,17 +68,20 @@ class ChiaDaemon extends EventEmitter {
                 this.outgoing.delete(msg.request_id);
                 this.incoming.set(msg.request_id, msg);
             } else if (msg.command === 'register_service') {
+                console.log(`connected event`);
                 this.emit('connected');
                 connected = true;
-            }
-            else {
+            } else {
                 // received a socket message that was not a response to something we sent
                 this.emit('event_message', msg);
             }
         });
 
+        let error = false;
         ws.on('error', (e) => {
+            console.log(`error event: ${e}`);
             this.emit('error', e);
+            error = true;
         });
 
         ws.on('close', () => {
@@ -89,16 +92,22 @@ class ChiaDaemon extends EventEmitter {
         const start = Date.now();
 
         // wait here until an incoming response shows up
-        while (!connected) {
-            await timer(100);
-            const elapsed = Date.now() - start;
-            if (elapsed > timeout_milliseconds) {
-                this.emit('error', new Error('Connection timeout expired'));
-                break;
+        while (!error && !connected) {
+            try {
+                await timer(100);
+                const elapsed = Date.now() - start;
+                if (elapsed > timeout_milliseconds) {
+                    this.emit('error', new Error('Connection timeout expired'));
+                    break;
+                }
+            } catch (e) {
+                console.log(e);
             }
         }
 
-        this.ws = ws;
+        if (!error && connected) {
+            this.ws = ws;
+        }
     }
 
     disconnect() {
