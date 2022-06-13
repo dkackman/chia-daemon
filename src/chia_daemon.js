@@ -40,7 +40,7 @@ class ChiaDaemon extends EventEmitter {
         };
     }
 
-    async connect(timeout_milliseconds = 1000) {
+    async connect() {
         if (this.ws !== undefined) {
             throw new Error('Already connected');
         }
@@ -68,7 +68,7 @@ class ChiaDaemon extends EventEmitter {
                 this.incoming.set(msg.request_id, msg);
             } else if (msg.command === 'register_service') {
                 this.emit('connected');
-                connected = true;
+                connected = true; // we consider ourselves connected only after we register
             } else {
                 // received a socket message that was not a response to something we sent
                 this.emit('event_message', msg);
@@ -83,6 +83,7 @@ class ChiaDaemon extends EventEmitter {
             this.emit('disconnected');
         });
 
+        const timeout_milliseconds = this.connection.timeout_seconds * 1000;
         const timer = ms => new Promise(res => setTimeout(res, ms));
         const start = Date.now();
 
