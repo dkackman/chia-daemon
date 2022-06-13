@@ -2,13 +2,6 @@ import chai from "chai";
 import { ChiaDaemon } from '../src/chia_daemon.js';
 
 const expect = chai.expect;
-const connection = {
-    host: 'localhost',
-    port: 55400,
-    key_path: '~/.chia/mainnet/config/ssl/daemon/private_daemon.key',
-    cert_path: '~/.chia/mainnet/config/ssl/daemon/private_daemon.crt',
-    timeout_seconds: 30,
-};
 
 describe('chia-daemon', () => {
     describe('connection', () => {
@@ -31,7 +24,15 @@ describe('chia-daemon', () => {
             expect(error).to.equal(true);
         });
         it('should succeed on valid connection _DEBUG_', async function() {
-            this.timeout(5000);
+            this.timeout(50000);
+            const connection = {
+                host: 'localhost',
+                port: 55400,
+                key_path: '~/.chia/mainnet/config/ssl/daemon/private_daemon.key',
+                cert_path: '~/.chia/mainnet/config/ssl/daemon/private_daemon.crt',
+                timeout_seconds: 30,
+            };
+            
             let error = false;
 
             const chia = new ChiaDaemon(connection, 'tests');
@@ -42,7 +43,6 @@ describe('chia-daemon', () => {
             await chia.connect(1750);
             expect(error).to.equal(false);
             chia.disconnect();
-            this.done();
         });
     });
 });

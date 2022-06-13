@@ -4,7 +4,6 @@ import { readFileSync } from 'fs';
 import createRpcProxy from './rpc_proxy.js';
 import { EventEmitter } from 'events';
 import untildify from './untildify.js';
-import { promisify } from 'util';
 
 // this can be found in the config but for convenience
 export let localDaemonConnection = {
@@ -18,14 +17,14 @@ export let localDaemonConnection = {
 // this guy encapsulates asynchronous communication with the chia daemon
 // which in turn proxies communication to the other chia services
 class ChiaDaemon extends EventEmitter {
-    constructor(connection, origin = 'my_chia_app') {
+    constructor(connection, service_name = 'my_chia_app') {
         super();
         if (connection === undefined) {
             throw new Error('Connection meta data must be provided');
         }
 
         this.connection = connection;
-        this.origin = origin;
+        this.service_name = service_name;
         this.outgoing = new Map(); // outgoing messages awaiting a response
         this.incoming = new Map(); // incoming responses not yet consumed
     }
@@ -56,7 +55,7 @@ class ChiaDaemon extends EventEmitter {
         });
 
         ws.on('open', () => {
-            const msg = formatMessage('daemon', 'register_service', { service: this.origin }, this.origin);
+            const msg = formatMessage('daemon', 'register_service', this.service_name, { service: this.service_name });
             ws.send(JSON.stringify(msg));
         });
 
@@ -68,7 +67,6 @@ class ChiaDaemon extends EventEmitter {
                 this.outgoing.delete(msg.request_id);
                 this.incoming.set(msg.request_id, msg);
             } else if (msg.command === 'register_service') {
-                console.log(`connected event`);
                 this.emit('connected');
                 connected = true;
             } else {
@@ -79,7 +77,6 @@ class ChiaDaemon extends EventEmitter {
 
         let error = false;
         ws.on('error', (e) => {
-            console.log(`error event: ${e}`);
             this.emit('error', e);
             error = true;
         });
@@ -93,15 +90,11 @@ class ChiaDaemon extends EventEmitter {
 
         // wait here until an incoming response shows up
         while (!error && !connected) {
-            try {
-                await timer(100);
-                const elapsed = Date.now() - start;
-                if (elapsed > timeout_milliseconds) {
-                    this.emit('error', new Error('Connection timeout expired'));
-                    break;
-                }
-            } catch (e) {
-                console.log(e);
+            await timer(100);
+            const elapsed = Date.now() - start;
+            if (elapsed > timeout_milliseconds) {
+                this.emit('error', new Error('Connection timeout expired'));
+                break;
             }
         }
 
@@ -126,7 +119,7 @@ class ChiaDaemon extends EventEmitter {
             throw new Error('Not connected');
         }
 
-        const outgoingMsg = formatMessage(destination, command, data, this.origin);
+        const outgoingMsg = formatMessage(destination, command, this.service_name, data);
 
         this.outgoing.set(outgoingMsg.request_id, outgoingMsg);
         this.ws.send(JSON.stringify(outgoingMsg));
