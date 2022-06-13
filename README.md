@@ -23,10 +23,13 @@ Each service is a field on the `services` property of the `ChiaDaemon`.
 
 ```javascript
 import loadUIConfig from 'config'
-import { ChiaDaemon } from '../src/chia_daemon.js';
+import { ChiaDaemon } from 'chia-daemon';
 
 const daemon = new ChiaDaemon(loadUIConfig(), 'my-chia-app');
-daemon.connect();
-const state = await daemon.services.full_node.get_blockchain_state();
+const connected = await daemon.connect();
+if (connected) {
+    const state = await daemon.services.full_node.get_blockchain_state();
+    console.log(state);
+}
 
 ```
