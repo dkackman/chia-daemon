@@ -3,15 +3,15 @@
 // and transform it into an rpc invocation though we don't know the endpoint name until runtime.
 // If the invoked method is an endpoint on the rpc server, it will be invoked as such.
 //
-// so we can do something like:
+// so we can do something like the below even though get_blockhain_state is not declared or implemented anywhere:
 // const full_node = createRpcProxy(chiaDeamon, 'chia_full_node');
-// const state = await full_node.get_blocchain_state();
+// const state = await full_node.get_blockhain_state();
 //
 /**
  * Returns a proxy object that transforms any method into an RPC invocation.
- * @param {ChiaDaemon} chia - The chia daemon service that will execute the RPC
- * @param {string} endpoint - The name of the chia endpoint service
- * @returns {Proxy} The proxy that will route methods calls
+ * @param {ChiaDaemon} chia - The chia daemon service that will execute the RPC.
+ * @param {string} endpoint - The name of the chia endpoint service.
+ * @returns {Proxy} The proxy that will route methods calls.
  */
 export default function createRpcProxy(chia, endpoint) {
     // create a proxy around a new empty object that will intrecept

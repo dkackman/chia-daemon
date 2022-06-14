@@ -11,7 +11,7 @@ const homeDirectory = os.homedir();
 /**
  * Loads the daemon connection details from the default config's ui section.
  * @param {string} net - The name of the network and ~/.chia/ file path to find the config file.
- * @returns Connection details
+ * @returns Connection details.
  */
 export function loadUIConfig(net = 'mainnet') {
     const config = readConfigFile(net);
