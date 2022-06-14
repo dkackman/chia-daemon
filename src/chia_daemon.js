@@ -67,6 +67,7 @@ class ChiaDaemon extends EventEmitter {
                 this.outgoing.delete(msg.request_id);
                 this.incoming.set(msg.request_id, msg);
             } else if (msg.command === 'register_service') {
+                this.ws = ws;
                 this.emit('connected');
                 connected = true; // we consider ourselves connected only after register_service succeeds
             } else {
@@ -95,10 +96,6 @@ class ChiaDaemon extends EventEmitter {
                 this.emit('error', new Error('Connection timeout expired'));
                 break;
             }
-        }
-
-        if (connected) {
-            this.ws = ws;
         }
 
         return connected;
