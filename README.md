@@ -14,6 +14,10 @@ npm install
 npm test
 ```
 
+## Documention
+
+https://dkackman.github.io/chia-daemon/
+
 ## Basic Usage
 
 Each service is a field on the `services` property of the `ChiaDaemon`.
