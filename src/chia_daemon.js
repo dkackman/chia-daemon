@@ -68,7 +68,7 @@ class ChiaDaemon extends EventEmitter {
                 this.incoming.set(msg.request_id, msg);
             } else if (msg.command === 'register_service') {
                 this.emit('connected');
-                connected = true; // we consider ourselves connected only after we register
+                connected = true; // we consider ourselves connected only after register_service succeeds
             } else {
                 // received a socket message that was not a response to something we sent
                 this.emit('event_message', msg);
