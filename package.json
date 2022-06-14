@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha test/*.ci.test.js --exit",
     "test-live": "mocha --exit",
-    "debug": "mocha -g '_DEBUG_' --exit"
+    "debug": "mocha -g '_DEBUG_' --exit",
+    "doc": "jsdoc src/chia_daemon.js -d docs -R README.md"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "chai": "^4.3.6",
     "eslint": "^8.17.0",
+    "jsdoc": "^3.6.10",
     "jshint": "^2.13.4",
     "mocha": "^10.0.0",
     "request": "^2.88.2"
