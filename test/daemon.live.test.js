@@ -22,11 +22,11 @@ const valid_connection = {
 
 describe('chia-daemon', () => {
     describe('connection', () => {
-        it('should raise error event on invalid connection', async () => {
+        it('should raise socket-error event on invalid connection', async () => {
             let error = false;
 
             const chia = new ChiaDaemon(bad_connection, 'tests');
-            chia.on('error', e => {
+            chia.on('socket-error', e => {
                 error = true;
             });
             const connected = await chia.connect();
@@ -37,7 +37,7 @@ describe('chia-daemon', () => {
         it('should return true on valid connection', async function () {
             const chia = new ChiaDaemon(valid_connection, 'tests');
             let error = false;
-            chia.on('error', e => {
+            chia.on('socket-error', e => {
                 console.log(e);
                 error = true;
             });

@@ -5,7 +5,7 @@ import createRpcProxy from './rpc_proxy.js';
 import { EventEmitter } from 'events';
 import untildify from './untildify.js';
 
-// this can be found in the config but for convenience
+/** This can be found in the config but here for convenience. */
 export let localDaemonConnection = {
     host: 'localhost',
     port: 55400,
@@ -14,9 +14,22 @@ export let localDaemonConnection = {
     timeout_seconds: 30,
 };
 
-// this guy encapsulates asynchronous communication with the chia daemon
-// which in turn proxies communication to the other chia services
+/**
+ * this guy encapsulates asynchronous communication with the chia daemon
+ * which in turn proxies communication to the other chia services
+ * @extends EventEmitter
+ */
 class ChiaDaemon extends EventEmitter {
+    /**
+     * Create a ChiaDaemon.
+     * @param {Object} connection - Details of the connection.
+     * @param {string} connection.host - The host name or IP address.
+     * @param {number} connection.port - The damon's listening port.
+     * @param {string} connection.key_path - File path to the certificate key file used to secure the connection.
+     * @param {string} connection.cert_path - File path to the certificate crt file used to secure the connection.
+     * @param {number} connection.timeout_seconds - Timeout, in seconds, for each call to the deamon.
+     * @param {string} service_name - the name of the client application or service talking to the daemon.
+     */
     constructor(connection, service_name = 'my_chia_app') {
         super();
         if (connection === undefined) {
@@ -29,6 +42,11 @@ class ChiaDaemon extends EventEmitter {
         this.incoming = new Map(); // incoming responses not yet consumed
     }
 
+    /**
+     * Property with each of the rpc services exposed by the chia node.
+     * https://dkackman.github.io/chia-api/redoc/
+     * @return {Object} An object with each of the service endpoints.
+     */
     get services() {
         return {
             daemon: createRpcProxy(this, 'daemon'),
@@ -40,6 +58,10 @@ class ChiaDaemon extends EventEmitter {
         };
     }
 
+    /**
+     * Opens the websocket connection and calls register_service on the daemon
+     * @returns {boolean} True if the socket is opened and service registered. Otherwise false.
+     */
     async connect() {
         if (this.ws !== undefined) {
             throw new Error('Already connected');
@@ -77,7 +99,7 @@ class ChiaDaemon extends EventEmitter {
         });
 
         ws.on('error', (e) => {
-            this.emit('error', e);
+            this.emit('socket-error', e);
         });
 
         ws.on('close', () => {
@@ -93,7 +115,7 @@ class ChiaDaemon extends EventEmitter {
             await timer(100);
             const elapsed = Date.now() - start;
             if (elapsed > timeout_milliseconds) {
-                this.emit('error', new Error('Connection timeout expired'));
+                this.emit('socket-error', new Error('Connection timeout expired'));
                 break;
             }
         }
@@ -101,6 +123,7 @@ class ChiaDaemon extends EventEmitter {
         return connected;
     }
 
+    /** Closes the websocket and clears all state */
     disconnect() {
         if (this.ws === undefined) {
             throw new Error('Not connected');
@@ -112,7 +135,14 @@ class ChiaDaemon extends EventEmitter {
         this.outgoing.clear();
     }
 
-    async sendCommand(destination, command, data) {
+    /**
+     * Sends a command to the daemon. For the most part not needed in favor of the 'ChiaDaemon.services' endpoints.
+     * @param {string} destination - The destination service for the command. One of the known services like wallet or full_node
+     * @param {string} command - The command to send, i.e. the rpc endpoint such as get_blockchain_state.
+     * @param {Object} data - Any input arguments for the command. Omit if no rpc arguments are needed.
+     * @returns {*} Any response payload from the endpoint. 
+     */
+    async sendCommand(destination, command, data = {}) {
         if (this.ws === undefined) {
             throw new Error('Not connected');
         }

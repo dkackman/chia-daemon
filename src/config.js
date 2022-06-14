@@ -1,5 +1,4 @@
 // adapted from https://github.com/Chia-Network/chia-blockchain-gui
-
 import yaml from 'js-yaml';
 import fs from 'fs';
 import os from 'os';
@@ -9,6 +8,11 @@ import untildify from './untildify.js';
 
 const homeDirectory = os.homedir();
 
+/**
+ * Loads the daemon connection details from the default config's ui section.
+ * @param {string} net - The name of the network and ~/.chia/ file path to find the config file.
+ * @returns Connection details
+ */
 export function loadUIConfig(net = 'mainnet') {
     const config = readConfigFile(net);
 
@@ -43,12 +47,17 @@ export function loadUIConfig(net = 'mainnet') {
     };
 }
 
+/**
+ * The root path to where the config file and certs are stored.
+ * @param {string} net - The name of the network and ~/.chia/ file path to find the config file.
+ * @returns The fully qualified path toe the default config file.
+ */
 export function getConfigRootDir(net = 'mainnet') {
     return 'CHIA_ROOT' in process.env ? untildify(process.env.CHIA_ROOT)
         : path.join(homeDirectory, '.chia', net);
 }
 
-export function readConfigFile(net = 'mainnet') {
+function readConfigFile(net = 'mainnet') {
     const configRootDir = getConfigRootDir(net);
 
     return yaml.load(fs.readFileSync(path.resolve(configRootDir, 'config/config.yaml'), 'utf8'));

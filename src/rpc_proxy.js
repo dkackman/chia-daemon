@@ -8,9 +8,10 @@
 // const state = await full_node.get_blocchain_state();
 //
 /**
- * [createRpcProxy Returns a proxy object that transforms any method into an RPC invocation]
- * @param  {Chia} chia The chia daemon service that will execute the RPC
- * @param  {string} endpoint The name of the chia endpoint service
+ * Returns a proxy object that transforms any method into an RPC invocation.
+ * @param {ChiaDaemon} chia - The chia daemon service that will execute the RPC
+ * @param {string} endpoint - The name of the chia endpoint service
+ * @returns {Proxy} The proxy that will route methods calls
  */
 export default function createRpcProxy(chia, endpoint) {
     // create a proxy around a new empty object that will intrecept
