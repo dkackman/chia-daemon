@@ -66,6 +66,10 @@ function getDefaultValue(typeDef) {
         return false;
     }
 
+    if (typeDef.type === 'array') {
+        return [];
+    }
+
     if (typeDef.type === 'object') {
         return getDefaultValue(typeDef.properties);
     }
