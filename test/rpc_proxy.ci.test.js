@@ -28,7 +28,6 @@ describe('rpc-proxy', () => {
 
             expect(descriptor).to.not.equal(null);
             expect(descriptor).to.not.equal(undefined);
-            console.log(descriptor);
         });
         it('should forward all other function calls to sendCommand', async () => {
             let resulting_endpoint = '';

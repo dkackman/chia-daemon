@@ -8,19 +8,31 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /* jshint ignore:end */
 
+/**
+ * Creates an object that matches the given endpoint's request schema.
+ * @param {string} service - The name of the chia rpc service.
+ * @param {string} endpoint - The endpoint on that service.
+ * @returns An object instance matching the payload schema with default poperty values set.
+ */
 export function makePayload(service, endpoint) {
-    const properties = getPayloadDescriptor(service, endpoint);
-    if (Object.keys(properties).length === 0) {
+    const schema = getPayloadDescriptor(service, endpoint);
+    if (_.isNil(_.get(schema, 'properties')) || Object.keys(schema.properties).length === 0) {
         return undefined;
     }
 
     const payload = {};
-    Object.entries(properties).forEach(function ([property, typeDef]) {
+    Object.entries(schema.properties).forEach(function ([property, typeDef]) {
         payload[property] = getDefaultValue(typeDef);
     });
     return payload;
 }
 
+/**
+ * Returns the descriptor of the response object schema in OpenAPI format.
+ * @param {string} service - The name of the chia rpc service.
+ * @param {string} endpoint - The endpoint on that service.
+ * @returns The schema property of the requestBody, if present.
+ */
 export function getPayloadDescriptor(service, endpoint) {
     const spec = yaml.load(fs.readFileSync(path.resolve(__dirname, `openapi/${service}.yaml`), 'utf8'));
     const p = spec.paths[`/${endpoint}`]; // path names will have the slash in them
@@ -28,7 +40,8 @@ export function getPayloadDescriptor(service, endpoint) {
         return undefined;
     }
 
-    return _.get(p, 'post.requestBody.content.application/json.schema.properties', {});
+    // this is not generically transferrable to non-chia openapi specs
+    return _.get(p, 'post.requestBody.content.application/json.schema');
 }
 
 function getDefaultValue(typeDef) {

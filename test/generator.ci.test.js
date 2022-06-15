@@ -21,7 +21,7 @@ describe('payload-generator', () => {
             expect(payload.hasOwnProperty('limit')).to.equal(true);
             expect(payload.limit).to.equal(10000);
         });
-        it('should return undefined when no payload is required', () => {
+        it('should return undefined when no payload is required _DEBUG_', () => {
             const payload = makePayload('crawler', 'healthz');
             expect(payload).to.equal(undefined);
         });  
