@@ -65,7 +65,7 @@ class ChiaDaemon extends EventEmitter {
      * @fires ChiaDaemon#event-message
      * @fires ChiaDaemon#socket-error
      * @fires ChiaDaemon#disconnected
-     * @returns {boolean} True if the socket is opened and service registered. Otherwise false.
+     * @returns {boolean} True if the socket is opened and service registered successfully. Otherwise false.
      */
     async connect() {
         if (this.ws !== undefined) {
@@ -116,7 +116,7 @@ class ChiaDaemon extends EventEmitter {
         const timer = ms => new Promise(res => setTimeout(res, ms));
         const start = Date.now();
 
-        // wait here until an incoming response shows up
+        // wait here until connected goes to true or we timeout
         while (!connected) {
             await timer(100);
             const elapsed = Date.now() - start;
@@ -183,7 +183,7 @@ class ChiaDaemon extends EventEmitter {
         if (incomingData.success === false) {
             throw new Error(incomingData.error);
         }
-        
+
         return incomingData;
     }
 }
