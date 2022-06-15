@@ -317,6 +317,176 @@
     
 
     
+    <h4 class="name" id="getPayloadDescriptor"><span class="type-signature"></span>getPayloadDescriptor<span class="signature">(service, endpoint)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Returns the descriptor of the response object schema in OpenAPI format.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>service</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The name of the chia rpc service.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>endpoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The endpoint on that service.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="payload_generator.js.html">payload_generator.js</a>, <a href="payload_generator.js.html#line36">line 36</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The schema property of the requestBody, if present.
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="loadUIConfig"><span class="type-signature"></span>loadUIConfig<span class="signature">(net)</span><span class="type-signature"></span></h4>
     
 
@@ -459,6 +629,176 @@
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id="makePayload"><span class="type-signature"></span>makePayload<span class="signature">(service, endpoint)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates an object that matches the given endpoint's request schema.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>service</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The name of the chia rpc service.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>endpoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The endpoint on that service.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="payload_generator.js.html">payload_generator.js</a>, <a href="payload_generator.js.html#line17">line 17</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An object instance matching the payload schema with default poperty values set.
+</div>
+
+
+
+    
+
+
+
+
+
+        
     
 
     
@@ -474,13 +814,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ChiaDaemon.html">ChiaDaemon</a></li></ul><h3>Events</h3><ul><li><a href="ChiaDaemon.html#event:connected">connected</a></li><li><a href="ChiaDaemon.html#event:connecting">connecting</a></li><li><a href="ChiaDaemon.html#event:disconnected">disconnected</a></li><li><a href="ChiaDaemon.html#event:event-message">event-message</a></li><li><a href="ChiaDaemon.html#event:socket-error">socket-error</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getConfigRootDir">getConfigRootDir</a></li><li><a href="global.html#loadUIConfig">loadUIConfig</a></li><li><a href="global.html#localDaemonConnection">localDaemonConnection</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ChiaDaemon.html">ChiaDaemon</a></li></ul><h3>Events</h3><ul><li><a href="ChiaDaemon.html#event:connected">connected</a></li><li><a href="ChiaDaemon.html#event:connecting">connecting</a></li><li><a href="ChiaDaemon.html#event:disconnected">disconnected</a></li><li><a href="ChiaDaemon.html#event:event-message">event-message</a></li><li><a href="ChiaDaemon.html#event:socket-error">socket-error</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getConfigRootDir">getConfigRootDir</a></li><li><a href="global.html#getPayloadDescriptor">getPayloadDescriptor</a></li><li><a href="global.html#loadUIConfig">loadUIConfig</a></li><li><a href="global.html#localDaemonConnection">localDaemonConnection</a></li><li><a href="global.html#makePayload">makePayload</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Jun 14 2022 11:16:24 GMT-0500 (Central Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Wed Jun 15 2022 14:16:19 GMT-0500 (Central Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
