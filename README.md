@@ -16,7 +16,7 @@ npm test
 
 ## Documention
 
-https://dkackman.github.io/chia-daemon/
+<https://dkackman.github.io/chia-daemon/>
 
 ## Basic Usage
 
@@ -38,4 +38,35 @@ if (connected) {
     console.log(state);
 }
 
+```
+
+## Payload Helpers
+
+Includes helper functions to get request payloads right:
+
+### Get the OpenAPI responseBody description
+
+```javascript
+console.log(daemon.full_node.getPayloadDescriptor('open_connection'));
+
+{
+  type: 'object',
+  required: [ 'ip', 'port' ],
+  properties: {
+    ip: { type: 'string', format: 'ipaddress' },
+    port: { type: 'integer' }
+  }
+}
+```
+
+### Get a Payload Object Instance
+
+```javascript
+const connection = daemon.full_node.makePayload('open_connection');
+console.log(payload);
+{ ip: '', port: 0 }
+connection.ip = 'chia.net';
+connection.port = 4444;
+
+await daemon.full_node.open_connection(connection);
 ```
