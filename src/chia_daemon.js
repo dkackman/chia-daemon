@@ -50,11 +50,11 @@ class ChiaDaemon extends EventEmitter {
     get services() {
         return {
             daemon: createRpcProxy(this, 'daemon'),
-            full_node: createRpcProxy(this, 'full_node'),
-            wallet: createRpcProxy(this, 'wallet'),
-            farmer: createRpcProxy(this, 'farmer'),
-            harvester: createRpcProxy(this, 'harvester'),
-            crawler: createRpcProxy(this, 'crawler'),
+            full_node: createRpcProxy(this, 'chia_full_node'),
+            wallet: createRpcProxy(this, 'chia_wallet'),
+            farmer: createRpcProxy(this, 'chia_farmer'),
+            harvester: createRpcProxy(this, 'chia_harvester'),
+            crawler: createRpcProxy(this, 'chia_crawler'),
         };
     }
 
