@@ -1,3 +1,4 @@
+import { makePayload, getPayloadDescriptor } from "./payload_generator.js";
 // This might be evil and generally abusive of the javascript type system but...
 // This here will allow us to call an arbitray method-like thing on any object
 // and transform it into an rpc invocation though we don't know the endpoint name until runtime.
@@ -10,19 +11,26 @@
 /**
  * Returns a proxy object that transforms any method into an RPC invocation.
  * @param {ChiaDaemon} chia - The chia daemon service that will execute the RPC.
- * @param {string} endpoint - The name of the chia endpoint service.
+ * @param {string} service - The name of the chia endpoint service.
  * @returns {Proxy} The proxy that will route methods calls.
  */
-export default function createRpcProxy(chia, endpoint) {
-    // create a proxy around a new empty object that will intrecept
-    // any method call that doesn't exist and turn it into an RPC invocation
-    return new Proxy({}, {
+export default function createRpcProxy(chia, service) {
+    // create a proxy around a new  object that will intrecept
+    // any method call that doesn't exist and turn it into an RPC invocation]
+    //
+    // add a couple helper functions
+    const o = {
+        makePayload: (endpoint) => makePayload(service, endpoint),
+        getPayloadDescriptor: (endpoint) => getPayloadDescriptor(service, endpoint),
+    };
+
+    return new Proxy(o, {
         get(target, functionName) {
             if (typeof target[functionName] === 'undefined') {
                 // here, since 'functionName' does not exist on the object, we are
                 // going to assume it is an rpc function name on the endpoint
                 // here we call back into the chia server to do the RPC
-                return async (data) => await chia.sendCommand(endpoint, functionName, data);
+                return async (data) => await chia.sendCommand(service, functionName, data);
             } else if (typeof target[functionName] === 'function') {
                 // here the function exists so just reflect apply to invoke
                 return new Proxy(target[functionName], {
