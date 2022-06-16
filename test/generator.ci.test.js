@@ -1,5 +1,5 @@
 import chai from "chai";
-import { makePayload } from '../src/payload_generator.js';
+import { getPayloadDescriptor, makePayload } from '../src/payload_generator.js';
 
 const expect = chai.expect;
 
@@ -21,9 +21,23 @@ describe('payload-generator', () => {
             expect(payload.hasOwnProperty('limit')).to.equal(true);
             expect(payload.limit).to.equal(10000);
         });
-        it('should return undefined when no payload is required _DEBUG_', () => {
+        it('should handle array properties', () => {
+            const payload = makePayload('farmer', 'get_harvester_plots_valid');
+            expect(payload).to.not.equal(null);
+            expect(payload).to.not.equal(undefined);
+            expect(payload.hasOwnProperty('filter')).to.equal(true);
+            expect(Array.isArray(payload.filter)).to.equal(true);
+        });
+        it('should return undefined when no payload is required', () => {
             const payload = makePayload('crawler', 'healthz');
             expect(payload).to.equal(undefined);
         });  
+    });
+    describe('descriptor', () => {
+        it('should handle retreive request body schema', () => {
+            const descriptor = getPayloadDescriptor('farmer', 'get_harvester_plots_duplicates');
+            expect(descriptor).to.not.equal(null);
+            expect(descriptor).to.not.equal(undefined);
+        });
     });
 });
