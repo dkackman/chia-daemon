@@ -15,8 +15,8 @@ export let localDaemonConnection = {
 };
 
 /**
- * this guy encapsulates asynchronous communication with the chia daemon
- * which in turn proxies communication to the other chia services
+ * This guy encapsulates asynchronous communication with the chia daemon
+ * which in turn proxies communication to the other chia services.
  * @extends EventEmitter
  */
 class ChiaDaemon extends EventEmitter {
@@ -55,6 +55,7 @@ class ChiaDaemon extends EventEmitter {
             farmer: createRpcProxy(this, 'chia_farmer'),
             harvester: createRpcProxy(this, 'chia_harvester'),
             crawler: createRpcProxy(this, 'chia_crawler'),
+            simulator: createRpcProxy(this, 'chia_full_node_simulator'),
         };
     }
 

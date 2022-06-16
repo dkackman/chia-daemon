@@ -35,7 +35,8 @@ export function makePayload(service, endpoint) {
  */
 export function getPayloadDescriptor(service, endpoint) {
     // actual chia service names start with chia_, so strip that out
-    const spec = yaml.load(fs.readFileSync(path.resolve(__dirname, `openapi/${service.replace('chia_', '')}.yaml`), 'utf8'));
+    const specname = service.replace('chia_', '').replace('_simulator', '');
+    const spec = yaml.load(fs.readFileSync(path.resolve(__dirname, `openapi/${specname}.yaml`), 'utf8'));
     const p = spec.paths[`/${endpoint}`]; // path names will have the slash in them
     if (_.isNil(p)) {
         return undefined;

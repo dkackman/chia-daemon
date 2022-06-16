@@ -13,7 +13,7 @@ const bad_connection = {
 
 // some tests assume that a daemon is reachable with these details
 const valid_connection = {
-    host: '172.17.162.79',
+    host: '172.23.207.133',
     port: 55400,
     key_path: '~/.chia/mainnet - wsl/config/ssl/daemon/private_daemon.key',
     cert_path: '~/.chia/mainnet - wsl/config/ssl/daemon/private_daemon.crt',
@@ -49,7 +49,8 @@ describe('chia-daemon', () => {
         });
     });
     describe('invocation', () => {
-        it('should get all the way to the rpc endpoint', async function () {
+        it('should get all the way to the rpc endpoint _DEBUG_', async function () {
+            this.timeout(100000);
             this.timeout(valid_connection.timeout_seconds * 1000);
             const chia = new ChiaDaemon(valid_connection, 'tests');
 
