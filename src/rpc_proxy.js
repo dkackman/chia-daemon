@@ -20,7 +20,7 @@ export default function createRpcProxy(chia, service) {
     //
     // add a couple helper functions
     const o = {
-        makePayload: (endpoint) => makePayload(service, endpoint),
+        makePayload: (endpoint, requiredOnly = true) => makePayload(service, endpoint, requiredOnly),
         getPayloadDescriptor: (endpoint) => getPayloadDescriptor(service, endpoint),
     };
 

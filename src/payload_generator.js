@@ -14,15 +14,22 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * @param {string} endpoint - The endpoint on that service.
  * @returns An object instance matching the payload schema with default poperty values set.
  */
-export function makePayload(service, endpoint) {
+export function makePayload(service, endpoint, requiredOnly = true) {
     const schema = getPayloadDescriptor(service, endpoint);
     if (_.isNil(_.get(schema, 'properties')) || Object.keys(schema.properties).length === 0) {
         return undefined;
     }
 
+    const requiredFields = _.get(schema, 'required', []);
     const payload = {};
     Object.entries(schema.properties).forEach(function ([property, typeDef]) {
-        payload[property] = getDefaultValue(typeDef);
+        // add the property to the returned object if
+        // - the caller requested all properties
+        // - or the property has a default value
+        // - or the property is required
+        if (!requiredOnly || typeDef.default !== undefined || requiredFields.includes(property)) {
+            payload[property] = getDefaultValue(typeDef);
+        }
     });
     return payload;
 }
@@ -56,7 +63,7 @@ function getDefaultValue(typeDef) {
     }
 
     if (typeDef.type === 'number') {
-        return  0.0;
+        return 0.0;
     }
 
     if (typeDef.type === 'string') {

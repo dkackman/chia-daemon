@@ -15,14 +15,14 @@ describe('payload-generator', () => {
             expect(typeof payload.port).to.equal('number');
         });
         it('should respect default values', () => {
-            const payload = makePayload('crawler', 'get_ips_after_timestamp');
+            const payload = makePayload('crawler', 'get_ips_after_timestamp', false);
             expect(payload).to.not.equal(null);
             expect(payload).to.not.equal(undefined);
             expect(payload.hasOwnProperty('limit')).to.equal(true);
             expect(payload.limit).to.equal(10000);
         });
         it('should handle array properties', () => {
-            const payload = makePayload('farmer', 'get_harvester_plots_valid');
+            const payload = makePayload('farmer', 'get_harvester_plots_valid', false);
             expect(payload).to.not.equal(null);
             expect(payload).to.not.equal(undefined);
             expect(payload.hasOwnProperty('filter')).to.equal(true);
@@ -31,6 +31,16 @@ describe('payload-generator', () => {
         it('should return undefined when no payload is required', () => {
             const payload = makePayload('crawler', 'healthz');
             expect(payload).to.equal(undefined);
+        });
+        it('should only return required fields when specified _DEBUG_', () => {
+            const payload = makePayload('daemon', 'start_plotting', true);
+            expect(payload.hasOwnProperty('delay')).to.not.equal(true);
+        });
+        it('should return optional fields when specified', () => {
+            const payload = makePayload('wallet', 'cancel_offer', false);
+            expect(payload.hasOwnProperty('trade_id')).to.equal(true);
+            expect(payload.hasOwnProperty('secure')).to.equal(true);
+            expect(payload.hasOwnProperty('fee')).to.equal(true);
         });  
     });
     describe('descriptor', () => {
