@@ -44,7 +44,7 @@ if (connected) {
 
 Includes helper functions to get request payloads right:
 
-### Get the OpenAPI responseBody description
+### Get the OpenAPI responseBody Schema Descriptor
 
 ```javascript
 console.log(daemon.full_node.getPayloadDescriptor('open_connection'));
