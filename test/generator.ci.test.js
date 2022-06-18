@@ -32,11 +32,11 @@ describe('payload-generator', () => {
             const payload = makePayload('crawler', 'healthz');
             expect(payload).to.equal(undefined);
         });
-        it('should only return required fields when specified _DEBUG_', () => {
-            const payload = makePayload('daemon', 'start_plotting', true);
+        it('should only return required fields by default', () => { 
+            const payload = makePayload('daemon', 'start_plotting');
             expect(payload.hasOwnProperty('delay')).to.not.equal(true);
         });
-        it('should return optional fields when specified', () => {
+        it('should return optional fields when asked for', () => {
             const payload = makePayload('wallet', 'cancel_offer', false);
             expect(payload.hasOwnProperty('trade_id')).to.equal(true);
             expect(payload.hasOwnProperty('secure')).to.equal(true);
@@ -44,7 +44,7 @@ describe('payload-generator', () => {
         });  
     });
     describe('descriptor', () => {
-        it('should handle retreive request body schema', () => {
+        it('should retreive request body schema', () => {
             const descriptor = getPayloadDescriptor('farmer', 'get_harvester_plots_duplicates');
             expect(descriptor).to.not.equal(null);
             expect(descriptor).to.not.equal(undefined);
