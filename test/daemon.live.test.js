@@ -13,10 +13,10 @@ const bad_connection = {
 
 // some tests assume that a daemon is reachable with these details
 const valid_connection = {
-    host: '172.23.207.133',
+    host: 'former',
     port: 55400,
-    key_path: '~/.chia/mainnet - wsl/config/ssl/daemon/private_daemon.key',
-    cert_path: '~/.chia/mainnet - wsl/config/ssl/daemon/private_daemon.crt',
+    key_path: '~/.chia/mainnet - former/config/ssl/daemon/private_daemon.key',
+    cert_path: '~/.chia/mainnet - former/config/ssl/daemon/private_daemon.crt',
     timeout_seconds: 10,
 };
 
@@ -50,7 +50,6 @@ describe('chia-daemon', () => {
     });
     describe('invocation', () => {
         it('should get all the way to the rpc endpoint', async function () {
-            this.timeout(100000);
             this.timeout(valid_connection.timeout_seconds * 1000);
             const chia = new ChiaDaemon(valid_connection, 'tests');
 
@@ -62,6 +61,36 @@ describe('chia-daemon', () => {
             expect(state).to.not.equal(null);
 
             chia.disconnect();
+        });
+    });
+    describe('listen', () => {
+        it('should capture an event _DEBUG_', async function () {
+            // this test requires the node under test to be plotting or otherwise 
+            // be triggered to emit an event
+            const timeout_milliseconds = 10000;
+            this.timeout(timeout_milliseconds + 500);
+            const chia = new ChiaDaemon(valid_connection, 'tests');
+
+            const connected = await chia.connect();
+            expect(connected).to.equal(true);
+
+            let event_received = false;
+            chia.on('event-message', m => event_received = true);
+
+            const timer = ms => new Promise(res => setTimeout(res, ms));
+            const start = Date.now();
+
+            ///stay here intil we receive an event or timeout 
+            while (!event_received) {
+                await timer(100);
+                const elapsed = Date.now() - start;
+                if (elapsed > timeout_milliseconds) {
+                    break;
+                }
+            }
+            chia.disconnect();
+
+            expect(event_received).to.equal(true);
         });
     });
 });
