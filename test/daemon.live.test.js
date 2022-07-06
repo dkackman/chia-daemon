@@ -67,9 +67,9 @@ describe('chia-daemon', () => {
         it('should capture an event _DEBUG_', async function () {
             // this test requires the node under test to be plotting or otherwise 
             // be triggered to emit an event
-            const timeout_milliseconds = 10000;
+            const timeout_milliseconds = 100000;
             this.timeout(timeout_milliseconds + 500);
-            const chia = new ChiaDaemon(valid_connection, 'tests');
+            const chia = new ChiaDaemon(valid_connection, 'wallet_ui');
 
             const connected = await chia.connect();
             expect(connected).to.equal(true);
