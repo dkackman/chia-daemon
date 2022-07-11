@@ -120,8 +120,7 @@ class ChiaDaemon extends EventEmitter {
         // wait here until connected goes to true or we timeout
         while (!connected) {
             await timer(100);
-            const elapsed = Date.now() - start;
-            if (elapsed > timeout_milliseconds) {
+            if (Date.now() - start > timeout_milliseconds) {
                 this.emit('socket-error', new Error('Connection timeout expired'));
                 break;
             }
