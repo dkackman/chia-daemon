@@ -15,10 +15,10 @@ import { makePayload, getPayloadDescriptor } from "./payload_generator.js";
  * @returns {Proxy} The proxy that will route methods calls.
  */
 export default function createRpcProxy(chia, service) {
-    // create a proxy around a new  object that will intrecept
-    // any method call that doesn't exist and turn it into an RPC invocation]
+    // create a proxy around a new object that will intrecept
+    // any method call that doesn't exist and turn it into an RPC invocation
     //
-    // add a couple helper functions
+    // add a couple helper functions to our synthetic object
     const o = {
         makePayload: (endpoint, requiredOnly = true) => makePayload(service, endpoint, requiredOnly),
         getPayloadDescriptor: (endpoint) => getPayloadDescriptor(service, endpoint),
