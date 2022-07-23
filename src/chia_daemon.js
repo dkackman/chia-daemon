@@ -105,7 +105,9 @@ class ChiaDaemon extends EventEmitter {
             }
         });
 
+        let error = false;
         ws.on('error', (e) => {
+            error = true;
             this.emit('socket-error', e);
         });
 
@@ -117,8 +119,8 @@ class ChiaDaemon extends EventEmitter {
         const timer = ms => new Promise(res => setTimeout(res, ms));
         const start = Date.now();
 
-        // wait here until connected goes to true or we timeout
-        while (!connected) {
+        // wait here until connected goes to true, there is an error or we timeout
+        while (!connected && !error) {
             await timer(100);
             if (Date.now() - start > timeout_milliseconds) {
                 this.emit('socket-error', new Error('Connection timeout expired'));
