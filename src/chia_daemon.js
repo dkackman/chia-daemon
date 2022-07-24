@@ -138,7 +138,12 @@ class ChiaDaemon extends EventEmitter {
         }
 
         this.ws.close();
+        this.ws.removeAllListeners('open');
+        this.ws.removeAllListeners('message');
+        this.ws.removeAllListeners('error');
+        this.ws.removeAllListeners('close');
         this.ws = undefined;
+
         this.incoming.clear();
         this.outgoing.clear();
     }
