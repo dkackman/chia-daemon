@@ -83,9 +83,13 @@ class ChiaDaemon extends EventEmitter {
             cert: readFileSync(untildify(this.connection.cert_path)),
         });
 
-        ws.on('open', () => {
+        ws.once('open', () => {
             const msg = formatMessage('daemon', 'register_service', this.service_name, { service: this.service_name });
             ws.send(JSON.stringify(msg));
+        });
+        
+        ws.once('close', () => {
+            this.emit('disconnected');
         });
 
         let connected = false;
@@ -111,10 +115,6 @@ class ChiaDaemon extends EventEmitter {
             this.emit('socket-error', e);
         });
 
-        ws.on('close', () => {
-            this.emit('disconnected');
-        });
-
         const timeout_milliseconds = this.connection.timeout_seconds * 1000;
         const timer = ms => new Promise(res => setTimeout(res, ms));
         const start = Date.now();
@@ -138,10 +138,8 @@ class ChiaDaemon extends EventEmitter {
         }
 
         this.ws.close();
-        this.ws.removeAllListeners('open');
         this.ws.removeAllListeners('message');
         this.ws.removeAllListeners('error');
-        this.ws.removeAllListeners('close');
         this.ws = undefined;
 
         this.incoming.clear();
