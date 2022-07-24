@@ -69,14 +69,14 @@ class ChiaDaemon extends EventEmitter {
      * @returns {boolean} True if the socket is opened and service registered successfully. Otherwise false.
      */
     async connect() {
-        if (this.ws !== undefined) {
+        if (this.connected) {
             throw new Error('Already connected');
         }
 
         const address = `wss://${this.connection.host}:${this.connection.port}`;
-
         this.emit('connecting', address);
 
+        // the lifetime of the websocket is between connect and disconnect
         const ws = new WebSocket(address, {
             rejectUnauthorized: false,
             key: readFileSync(untildify(this.connection.key_path)),
@@ -92,7 +92,6 @@ class ChiaDaemon extends EventEmitter {
             this.emit('disconnected');
         });
 
-        let connected = false;
         ws.on('message', (data) => {
             const msg = JSON.parse(data);
 
@@ -101,8 +100,7 @@ class ChiaDaemon extends EventEmitter {
                 this.incoming.set(msg.request_id, msg);
             } else if (msg.command === 'register_service') {
                 this.ws = ws;
-                this.emit('connected');
-                connected = true; // we consider ourselves connected only after register_service succeeds
+                this.emit('connected');// we consider ourselves connected only after register_service succeeds
             } else {
                 // received a socket message that was not a response to something we sent
                 this.emit('event-message', msg);
@@ -120,7 +118,7 @@ class ChiaDaemon extends EventEmitter {
         const start = Date.now();
 
         // wait here until connected goes to true, there is an error or we timeout
-        while (!connected && !error) {
+        while (this.ws === undefined && !error) {
             await timer(100);
             if (Date.now() - start > timeout_milliseconds) {
                 this.emit('socket-error', new Error('Connection timeout expired'));
@@ -128,12 +126,19 @@ class ChiaDaemon extends EventEmitter {
             }
         }
 
-        return connected;
+        return this.connected;
+    }
+
+    /**
+     * Property indicating whether the chia daemon websocket is currently conneted
+     */
+    get connected() {
+        return this.ws !== undefined;
     }
 
     /** Closes the websocket and clears all state */
     disconnect() {
-        if (this.ws === undefined) {
+        if (!this.connected) {
             throw new Error('Not connected');
         }
 
@@ -154,7 +159,7 @@ class ChiaDaemon extends EventEmitter {
      * @returns {*} Any response payload from the endpoint. 
      */
     async sendCommand(destination, command, data = {}) {
-        if (this.ws === undefined) {
+        if (!this.connected) {
             throw new Error('Not connected');
         }
 
