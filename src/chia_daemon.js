@@ -37,9 +37,21 @@ class ChiaDaemon extends EventEmitter {
         }
 
         this.connection = connection;
-        this.service_name = service_name;
+        this._service_name = service_name;
         this.outgoing = new Map(); // outgoing messages awaiting a response
         this.incoming = new Map(); // incoming responses not yet consumed
+    }
+
+    /** The service_name passed to the daemon as the message origin */
+    get serviceName() {
+        return this._service_name;
+    }
+
+    /**
+     * Property indicating whether the chia daemon websocket is currently conneted
+     */
+     get connected() {
+        return this.ws !== undefined;
     }
 
     /**
@@ -84,7 +96,7 @@ class ChiaDaemon extends EventEmitter {
         });
 
         ws.once('open', () => {
-            const msg = formatMessage('daemon', 'register_service', this.service_name, { service: this.service_name });
+            const msg = formatMessage('daemon', 'register_service', this._service_name, { service: this._service_name });
             ws.send(JSON.stringify(msg));
         });
         
@@ -129,13 +141,6 @@ class ChiaDaemon extends EventEmitter {
         return this.connected;
     }
 
-    /**
-     * Property indicating whether the chia daemon websocket is currently conneted
-     */
-    get connected() {
-        return this.ws !== undefined;
-    }
-
     /** Closes the websocket and clears all state */
     disconnect() {
         if (!this.connected) {
@@ -163,7 +168,7 @@ class ChiaDaemon extends EventEmitter {
             throw new Error('Not connected');
         }
 
-        const outgoingMsg = formatMessage(destination, command, this.service_name, data);
+        const outgoingMsg = formatMessage(destination, command, this._service_name, data);
 
         this.outgoing.set(outgoingMsg.request_id, outgoingMsg);
         this.ws.send(JSON.stringify(outgoingMsg));
