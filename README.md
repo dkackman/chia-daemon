@@ -1,3 +1,6 @@
+**This repo is archived and chia-daemon is now part of https://github.com/dkackman/chia-repl**
+
+
 # chia-daemon
 
 [![Node.js CI](https://github.com/dkackman/chia-daemon/actions/workflows/node.js.yml/badge.svg)](https://github.com/dkackman/chia-daemon/actions/workflows/node.js.yml)
